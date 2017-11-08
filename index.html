@@ -43,11 +43,87 @@
 	      <section data-background='https://farm7.staticflickr.com/6240/6337745964_d652368ed9_o_d.jpg'
 		       alt='solito por la vida'>
 		<h1>Siguen así...</h1>
+
+		<aside class='notes'>Y tienen que acabar de todas
+		formas con el libro impreso. Y el libro electrónico. Y
+		  hay diferentes formas de estos, todas ellas con
+		  metadatos. Y tienes que hacer desde el diseño de la
+		portada hasta el "blurb" y subirlo a un formulario en
+		  Kindle Direct Publishing, que es la forma principal de hacerlo</aside>
+		</aside>
 	      </section>
 
+	      <section data-background='https://farm3.staticflickr.com/2938/14753210871_49b85a79d0_h_d.jpg'
+		       alt='ordenador'>
+		<h1>📚 → 🖥 </h1>
+		<aside class='notes'>El trabajar solo también te da
+		libertad. Por ejemplo, de producir todas las ediciones
+		que quieras, ediciones personalizadas, ediciones
+		  diferentes de ebook y libro...</aside>
+	      </section>
+
+	      <section>
+		<h1>Extrae los URLs</h1>
+		<pre><code>use Text::Markdown;
+use JSON::Tiny;
+sub MAIN( $dir = "txt/" ) {
+    my @files = $dir.IO.dir(:test(/ ".md" $/));
+    my $references;
+    for @files -> $f {
+	my $text =$f.slurp();
+	my $md = Text::Markdown::Document.new($text);
+	for $md.items -> $i { # ...
+	    if ( $i ~~ Text::Markdown::Link ) {
+		if ( $i.url ~~ /http/ ) {
+		    push $references, { url => $i.url, text => $i.text };
+		}
+	    }		
+	}
+    }
+    say to-json $references;
+}</code></pre>
+		<aside class='notes'>Los libros electrónicos son algo
+		  fundamentalmente diferente de los libros físicos. Para
+		  empezar, son libros conectados a Internet
+		  siempre. Pero hay que hacer algo con los URLs. </aside> 
+	      </section>
+
+	      <section><h1>Formato del código</h1>
+		<pre><code>use Text::Markdown;
+sub MAIN( $dir = "txt/" ) {
+    for $dir.IO.dir(:test(/ ".md" $/)) -> $f {
+	my $md = Text::Markdown::Document.new($f.slurp());
+	for $md.items -> $i {
+	    if ( $i ~~ Text::Markdown::CodeBlock ) {
+		my @lines = $i.text.split("\n");
+		for @lines -> $l {
+		    if ( $l.chars > 60 ) {
+			say "→ $l\n→→Has "~$l.chars~" length";
+		    }
+		}
+	    }
+		
+	}
+    }
+}</code></pre>
+
+		<aside class='notes'>Cuando ya se ha enviado a
+		publicar, una de las cosas que se comprueban es la
+		  longitud de las líneas impresas. Con este se usa
+		  una regla heurística para que no dé problemas</aside>
+	      </section>
+	      
 	      <section><h1>Créditos</h1>
 		<ul><li>Foto playa
-		    por <a href='https://www.flickr.com/photos/61940311@N06/6337745964/'>Dan K</a></li>
+		    por <a href='https://www.flickr.com/photos/61940311@N06/6337745964/'>Dan
+		      K</a></li>
+		  <li>Imprenta
+		    de <a href='https://www.flickr.com/photos/pingnews/2872801990/'>Pingnews.com</a></li>
+
+		  <li>Ordenador
+		  del <a href='https://www.flickr.com/photos/internetarchivebookimages/14753210871/'>Bell
+		      Telephone Magazine</a> via Internet archive.</li>
+		</ul>
 	    </div>
 	  </div>
 	  
