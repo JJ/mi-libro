@@ -144,6 +144,45 @@ sub MAIN( $dir = "txt/" ) {
 		diferencia. Hice el script en Python para el curso de
 		  Python, el de Perl 6 para el de Perl 6</aside>
 	      </section>
+
+	      <section><h1>Expande URLs</h1>
+		<pre><code>ficheros = glob.glob(dir+"/*.md")
+for f in ficheros:
+    file_content = open(f,"r").read()
+    file_content = re.sub(r'\[([^\]]+)\]\((http[^\(]+)\)',r'\1 → \2', file_content)
+
+    for key in sorted(dict_urls,key=len,reverse=True):
+        file_content = file_content.replace(key, dict_urls[key])
+    f = f.replace('.md','-links.md')
+    with open(f, "w") as links_file:
+        links_file.write( file_content )
+		</code></pre>
+		<aside class='notes'>Con esto se expanden los URLs y
+		  se crea algo listo para crear algo
+		  imprimible.</aside>
+	      </section>
+
+	      <section><h1>Genera para subir</h1>
+		<pre><code>../utils/expande-URLs.py . ../utils/short-links.json
+pandoc --template="$PWD"/../utils/plantilla.latex \
+    -V lang=es-ES \
+    -V author='JJ Merelo' -V title='Aprende Python como si estuvieras en el siglo XXI'\
+    -V documentclass=extbook\
+    -S --latex-engine=xelatex \
+    -o aprende-python-kdp.pdf \
+    01.empezar-links.md  02.datos-links.md 03.logica-links.md 04.componiendo-links.md 05.identificando-links.md 06.sinpilas-links.md --toc
+rm *-links.md
+		</code></pre>
+		<aside class='notes'>Con eso tenemos un PDF listo para
+		  subir. Y usando xelatex porque llevan
+		  unicode. Y Pandoc es una maravilla. Es
+		  imprescindible. </aside>
+	      </section>
+
+	      <section><h1>Compra mi(s) libro(s)</h1>
+		<aside class='notes'>Ahora que sabes todo lo que
+		  molan</aside>
+	      </section>
 	      
 	      <section><h1>Créditos</h1>
 		<ul><li>Foto playa
